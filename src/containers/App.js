@@ -4,6 +4,40 @@ import People from '../components/People/People'
 import Cockpit from '../components/Cockpit/Cockpit'
 
 class App extends Component {
+
+  // CREATION LIFECYCLE HOOK DEMO **********
+  // ***************************************
+
+  constructor(props) {
+    super(props)
+    console.log('[App.js] Inside Constructor', props)
+  }
+
+  componentWillMount() {
+    console.log('[App.js] Inside componentWillMount()')
+  }
+
+  componentDidMount() {
+    console.log('[App.js] Inside componentDidMount()')
+  }
+
+  // UPDATE LIFECYCLE HOOK DEMO: STATE CHANGE **********
+  // ***************************************************
+
+  shouldComponentUpdate(nextProps, nextState) {
+    console.log('[UPDATE App.js] Inside shouldComponentUpdate', nextProps, nextState)
+    return true
+  }
+
+  componentWillUpdate(nextProps, nextState) {
+    console.log('[UPDATE App.js] Inside componentWillUpdate', nextProps, nextState)
+  }
+
+  componentDidUpdate() {
+    console.log('[UPDATE App.js] Inside componentDidUpdate')
+  }
+
+
   // app state ******************
   // ****************************
   state = {
@@ -49,6 +83,7 @@ class App extends Component {
   // Render Method ***********************
   // *************************************
   render() {
+    console.log('[App.js] Inside render()')
     // Render helpers
     let people = null
     if (this.state.showPeople) {
@@ -65,8 +100,9 @@ class App extends Component {
         <Cockpit
           showPeople={this.state.showPeople}
           people={this.state.people}
-          clicked={this.togglePeopleHandler} />
-          
+          clicked={this.togglePeopleHandler}
+          appTitle={this.props.title} />
+
         {people}
 
       </div>
