@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import classes from './App.css';
 import Person from './Person/Person'
-import ErrorBoundary from './ErrorBoundary/ErrorBoundary'
 
 class App extends Component {
   // app state
@@ -53,24 +52,12 @@ class App extends Component {
       people = (
         <div>
           {this.state.people.map((person, index) => {
-            // Here we're wrapping our Person Component in our ErrorBoundary
-            // Component so we can handle thrown errors
-            // This is a higher-order Component; a Component we wrap others
-            // in with the goal of handling errors they might throw
-            // Need to move the key property to the outer-most element,
-            // so need to move it to the ErrorBoundary Comnponent
-            // NOTE: in production, you won't see the ErrorBoundary component,
-            // but it will work in production. You shouldn't be wrapping
-            // everything in these, just wrap code you think MIGHT fail
-            // and you can't control that; good tool to show a custom error
-            // message and not have the entire application fail
-            return <ErrorBoundary key={person.id}>
-              <Person
+            return <Person
               click={() => this.deletePersonHandler(index)}
               name={person.name}
               age={person.age}
+              key={person.id}
               changed={(event) => this.nameChangedHandler(event, person.id)} />
-            </ErrorBoundary>
           })}
         </div>
       )
