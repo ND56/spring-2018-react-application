@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import classes from './App.css';
 import Person from './Person/Person'
+import ErrorBoundary from './ErrorBoundary/ErrorBoundary'
 
 class App extends Component {
   // app state
@@ -45,32 +46,35 @@ class App extends Component {
 
   // Render Method
   render() {
-
-    // styling objects
-    const buttonStyle = {
-      backgroundColor: 'green',
-      color: 'white',
-      border: '1px solid blue',
-      padding: '8px',
-      cursor: 'pointer',
-    }
-
     // Render helpers
+    let btnClass = ''
     let people = null
     if (this.state.showPeople) {
       people = (
         <div>
           {this.state.people.map((person, index) => {
-            return <Person
+            // Here we're wrapping our Person Component in our ErrorBoundary
+            // Component so we can handle thrown errors
+            // This is a higher-order Component; a Component we wrap others
+            // in with the goal of handling errors they might throw
+            // Need to move the key property to the outer-most element,
+            // so need to move it to the ErrorBoundary Comnponent
+            // NOTE: in production, you won't see the ErrorBoundary component,
+            // but it will work in production. You shouldn't be wrapping
+            // everything in these, just wrap code you think MIGHT fail
+            // and you can't control that; good tool to show a custom error
+            // message and not have the entire application fail
+            return <ErrorBoundary key={person.id}>
+              <Person
               click={() => this.deletePersonHandler(index)}
               name={person.name}
               age={person.age}
-              key={person.id}
               changed={(event) => this.nameChangedHandler(event, person.id)} />
+            </ErrorBoundary>
           })}
         </div>
       )
-      buttonStyle.backgroundColor = 'red'
+      btnClass = classes.Red
     }
 
     // need to update how we refer to these classes; no longer strings
@@ -90,7 +94,7 @@ class App extends Component {
         <p className={assignedClasses.join(' ')}>This is really working!</p>
 
         <button
-          style={buttonStyle}
+          className={btnClass}
           onClick={this.togglePeopleHandler}>Toggle People</button>
 
         {people}
