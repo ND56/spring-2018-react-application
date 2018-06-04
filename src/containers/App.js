@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import classes from './App.css';
 import People from '../components/People/People'
 import Cockpit from '../components/Cockpit/Cockpit'
+import Aux from '../hoc/Aux'
+// lower case because not a functional component
+import withClass from '../hoc/withClass'
 
 class App extends Component {
 
@@ -46,7 +49,8 @@ class App extends Component {
       { id: 'af2320', name: 'Nick', age: 28 },
       { id: 'ki37f', name: 'Em', age: 29 }
     ],
-    showPeople: false
+    showPeople: false,
+    toggleClicked: 0
   }
 
   // event handlers ***********************
@@ -77,13 +81,19 @@ class App extends Component {
 
   togglePeopleHandler = () => {
     const doesShow = this.state.showPeople
-    this.setState({showPeople: !doesShow})
+    this.setState( (prevState, props) => {
+      return {
+        showPeople: !doesShow,
+        toggleClicked: prevState.toggleClicked + 1
+      }
+    })
   }
 
   // Render Method ***********************
   // *************************************
   render() {
     console.log('[App.js] Inside render()')
+    console.log(React.version)
     // Render helpers
     let people = null
     if (this.state.showPeople) {
@@ -95,8 +105,7 @@ class App extends Component {
 
     // Return JSX
     return (
-      <div className={classes.App}>
-
+      <Aux>
         <Cockpit
           showPeople={this.state.showPeople}
           people={this.state.people}
@@ -104,10 +113,11 @@ class App extends Component {
           appTitle={this.props.title} />
 
         {people}
-
-      </div>
+      </Aux>
     );
   }
 }
 
-export default App;
+// don't wrap JSX in this because it's not a component; wrap your App in the
+// function at the export
+export default withClass(App, classes.App);
