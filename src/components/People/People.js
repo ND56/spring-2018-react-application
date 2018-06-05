@@ -9,6 +9,8 @@ class People extends Component {
   constructor(props) {
     super(props)
     console.log('[People.js] Inside Constructor', props)
+    // say we want to create a reference to the last person we're creating
+    this.lastPersonRef = React.createRef()
   }
 
   componentWillMount() {
@@ -37,6 +39,9 @@ class People extends Component {
 
   componentDidUpdate() {
     console.log('[UPDATE People.js] Inside componentDidUpdate')
+    // now we're using a method on the Person element that was referenced
+    // here in the People component
+    this.lastPersonRef.current.focus()
   }
 
   render () {
@@ -48,6 +53,10 @@ class People extends Component {
           name={person.name}
           age={person.age}
           key={person.id}
+          // authenticated={this.props.isAuthenticated}
+          // ^ can get rid of this because we switched to passing global state
+          // with context
+          forwardedRef={this.lastPersonRef}
           changed={(event) => this.props.changed(event, person.id)} />
       })
   }

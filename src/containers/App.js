@@ -6,6 +6,8 @@ import Aux from '../hoc/Aux'
 // lower case because not a functional component
 import withClass from '../hoc/withClass'
 
+export const AuthContext = React.createContext(false)
+
 class App extends Component {
 
   // CREATION LIFECYCLE HOOK DEMO **********
@@ -50,7 +52,8 @@ class App extends Component {
       { id: 'ki37f', name: 'Em', age: 29 }
     ],
     showPeople: false,
-    toggleClicked: 0
+    toggleClicked: 0,
+    authenticated: false
   }
 
   // event handlers ***********************
@@ -89,6 +92,10 @@ class App extends Component {
     })
   }
 
+  loginHandler = () => {
+    this.setState({authenticated: true})
+  }
+
   // Render Method ***********************
   // *************************************
   render() {
@@ -100,6 +107,9 @@ class App extends Component {
       people = <People
         people={this.state.people}
         clicked={this.deletePersonHandler}
+        // isAuthenticated={this.state.authenticated}
+        // ^ can get rid of this because we switched to passing the global state
+        // via the context API
         changed={this.nameChangedHandler} />
     }
 
@@ -110,9 +120,13 @@ class App extends Component {
           showPeople={this.state.showPeople}
           people={this.state.people}
           clicked={this.togglePeopleHandler}
+          login={this.loginHandler}
           appTitle={this.props.title} />
+          
+        <AuthContext.Provider value={this.state.authenticated}>
+          {people}
+        </AuthContext.Provider>
 
-        {people}
       </Aux>
     );
   }
